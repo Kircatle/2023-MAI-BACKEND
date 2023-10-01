@@ -1,3 +1,4 @@
 .env
 env
 expirements.ipynb
+__pycache__
