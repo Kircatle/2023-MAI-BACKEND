@@ -47,7 +47,7 @@ class Incident(models.Model):
     def to_json(self):
         return {
             "id": str(self.id),
-            "incident_type_id": self.incident_type.id if self.incident_type is not None else None,
+            "incident_type": self.incident_type.id if self.incident_type is not None else None,
             "description": self.description,
             "create_time": str(self.create_time),
             "open_incident_time": str(self.open_incident_time),
