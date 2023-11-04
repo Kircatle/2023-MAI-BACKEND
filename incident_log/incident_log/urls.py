@@ -17,9 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from incident.views import (get_all_incidents,get_all_incidents_type,
-                            create_incident,search_by_incident_type,search_incidents_from_to,create_type)
+                            create_incident,search_by_description,search_incidents_from_to,create_type_incident,
+                            get_all,search_incidents_from_to,search_by_description)
 
 urlpatterns = [
-    path("api/incident//", get_all_incidents, name="get-all-incidents"),
+    path("api/incident//create", create_incident, name="create-incident"),
+    path("api/incident_type//create", create_type_incident, name="create-incident-type"),
     path("api/incident_type//", get_all_incidents_type, name="get-all-incident-types"),
+    path("api/incident//", get_all_incidents, name="get-all-incidents"),
+    path("api//", get_all, name="get-all"),
+    path("api/incident/search/by-date",search_incidents_from_to,name='search-by-date'),
+    path("api/incident/search/by-description",search_by_description, name='search-by-description')
+
 ]
