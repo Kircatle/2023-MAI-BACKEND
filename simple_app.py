@@ -1,24 +1,18 @@
 from wsgiref.simple_server import make_server
-import json
-import logging
+
 
 def application(environ, start_response):
-    content = {}
-    for i in range(100000):
-        content[str(i)] = str('Hello! My name is Kirill!')
-    content = json.dumps(content).encode()
+    response_body = b"Dattebayo!\n"
     status = '200 OK'
-    response_headers = [('Content-Type', 'application/json'),
-                        ('Content-Length', str(len(content)))]
+    response_headers = [
+        ('Content-Type', 'text/plain'),
+        ('Content-Length', str(len(response_body)))
+    ]
     start_response(status, response_headers)
-    return [content]
+    return [response_body]
+
 
 if __name__ == '__main__':
-    try:
-        port = 8006
-        http_server = make_server('', port, application)
-        print(f'Server has been created! Port: {port}')
-        http_server.serve_forever()
-    except KeyboardInterrupt:
-        http_server.server_close()
-        print(f'Server has been closed!')
+    httpd = make_server('', 8002, application)
+    print("Serving on port 8002...")
+    httpd.serve_forever()
