@@ -1,0 +1,71 @@
+version: "3.3"
+
+services:
+
+  postgres:
+    image: postgres
+    container_name: postgres_incident
+    environment:
+      POSTGRES_DB: "incident_log"
+      POSTGRES_USER: "kitcatle"
+      POSTGRES_PASSWORD: "qwerty"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+      - pg_data_incident:/var/lib/posgresql/data
+
+    networks:
+      - app-network
+    ports:
+      - "5455:5455"
+    restart: always
+    command: -p 5455
+
+  django:
+    build:
+      context: incident_log
+      dockerfile: Dockerfile
+    container_name: django
+    environment:
+      POSTGRES_NAME: "incident_log"
+      POSTGRES_USER: "kitcatle"
+      POSTGRES_PASSWORD: "qwerty"
+      POSTGRES_HOST: "postgres"
+    restart: always
+
+    volumes:
+      - .:/code
+
+    ports:
+      - "8003:8003"
+
+    networks:
+      - app-network
+
+    depends_on:
+      - postgres
+
+    command: sh -c "export DJANGO_SETTINGS_MODULE=incident_log.settings_docker &&
+                    python3 incident_log/manage.py makemigrations &&
+                    python3 incident_log/manage.py migrate &&
+                    python3 incident_log/manage.py runserver 0.0.0.0:8003"
+
+  nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: always
+    ports:
+      - "8011:8011"
+    networks:
+      - app-network
+    depends_on:
+      - django
+
+
+volumes:
+  pg_data_incident:
+
+networks:
+  app-network:
+    driver: bridge
