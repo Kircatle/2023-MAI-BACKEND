@@ -13,6 +13,6 @@ def application(environ, start_response):
 
 
 if __name__ == '__main__':
-    httpd = make_server('', 8002, application)
-    print("Serving on port 8002...")
+    httpd = make_server('', 9000, application)
+    print("Serving on port 9000...")
     httpd.serve_forever()

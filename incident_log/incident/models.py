@@ -28,7 +28,7 @@ class IncidentType(models.Model):
     
 class Incident(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    incident_type = models.ForeignKey(IncidentType, on_delete=models.SET_NULL, verbose_name='Incident type', null=True)
+    incident_type = models.ForeignKey(IncidentType, on_delete=models.CASCADE, verbose_name='Incident type', null=False)
     description = models.CharField(max_length=1024, verbose_name='Description', null=True, unique=False)
     create_time = models.DateTimeField(verbose_name='Create time', default=datetime.now)
     open_incident_time = models.DateTimeField(verbose_name='Open time', default=datetime.now)

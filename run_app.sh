@@ -7,7 +7,7 @@ readonly WORKERS_CNT=2
 
 function main()
 {
-  if ! gunicorn --workers ${WORKERS_CNT} simple_app:application  -b :8002; then
+  if ! gunicorn --workers ${WORKERS_CNT} simple_app:application  -b :9000; then
     echo "Failed to run gunicorn..."
     return 1
   fi
