@@ -10,6 +10,8 @@ from .models import IncidentType, Incident
 from rest_framework import generics
 from .serializers import IncidentSerializer, IncidentTypeSerializer
 from django.db.models import Q
+import datetime
+
 
 @csrf_exempt
 @require_http_methods(["GET"])
@@ -56,9 +58,17 @@ def create_incident(request: HttpRequest) -> JsonResponse:
         open_incident_time = body.get('open_incident_time')
         close_incident_time = body.get('close_incident_time')
         acknowledge_time = body.get('acknowledge_time')
+        if create_time is None:
+            create_time = datetime.datetime.now()
+        if open_incident_time is None:
+            open_incident_time = datetime.datetime.now()
         incident_type = None
         if incident_type_id is not None:
             incident_type = IncidentType.objects.get(pk=incident_type_id)
+            if incident_type is None:
+                return JsonResponse({"message": "incident_type not found"}, status=400)
+        else:
+            return JsonResponse({"message": "incident_type not found"}, status=400)
         obj = Incident.objects.create(
             description=description,
             create_time=create_time,
